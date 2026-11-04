@@ -1,6 +1,7 @@
 const express = require('express');
 const Account = require('../db');
 const router = express.Router();
+const {authMiddleware} = require("../middleware");
 
 
 router.post("/transfer", authMiddleware, async (req, res) => {

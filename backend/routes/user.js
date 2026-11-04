@@ -1,20 +1,21 @@
-const router = require("express");
+const express = require("express");
+const router = express.Router();
 
 
 const { User, Account } = require("../db");
 
 
-const {zod} = require("zod");
+const {z} = require("zod");
 const { JWT_SECRET } = require("../config");
 const { authMiddleware } = require("../middleware");
 
 
 
-const signupBody = zod.object({
-    username: zod.string().email(),
-    firstName: zod.string(),
-    lastName: zod.string(),
-    password: zod.string()
+const signupBody = z.object({
+    username: z.string().email(),
+    firstName: z.string(),
+    lastName: z.string(),
+    password: z.string()
 })
 
 router.post("/signup", async(req,res) => {
@@ -61,9 +62,9 @@ router.post("/signup", async(req,res) => {
 });
 
 
-const signinBody = zod.object({
-    username: zod.string().email(),
-    password: zod.string()
+const signinBody = z.object({
+    username: z.string().email(),
+    password: z.string()
 });
 
 router.post("/signin", async (req, res) => {
@@ -97,10 +98,10 @@ router.post("/signin", async (req, res) => {
 });
 
 
-const updateBody = zod.object({
-    password: zod.string().optional(),
-    firstName: zod.string().optional(),
-    lastName: zod.string().optional()
+const updateBody = z.object({
+    password: z.string().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional()
 });
 
 
@@ -120,7 +121,7 @@ router.put("/", authMiddleware, async (req, res) => {
     });
 })
 
-route.get("/bulk", async (req, res) => {
+router.get("/bulk", async (req, res) => {
     const filter = req.query.filter || "";
 
     const users = await User.find({
