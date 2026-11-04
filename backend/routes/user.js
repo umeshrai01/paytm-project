@@ -1,7 +1,7 @@
 const router = require("express");
 
 
-const { User } = require("../db");
+const { User, Account } = require("../db");
 
 
 const {zod} = require("zod");
@@ -43,6 +43,12 @@ router.post("/signup", async(req,res) => {
     });
 
     const userId = user._id;
+
+
+    await Account.create({
+        userId,
+        balance: 1 + Math.random() * 10000
+    });
 
     const token = jwt.sign({
         userId
@@ -135,6 +141,16 @@ route.get("/bulk", async (req, res) => {
     });
 });
 
+
+router.get("/balance", authMiddleware, async (req, res) => {
+    const account = await Account.findOne({
+        userId: req.userId
+    });
+    
+    res.json({
+        balance: account.balance
+    });
+});
 
 
 
